@@ -1,0 +1,94 @@
+import 'dart:io';
+import 'dart:math';
+import 'package:characters/characters.dart';
+
+enum Mood {
+  happy, sad, energetic, calm, love, angry, excited
+}
+
+void main() {
+  print('Введите ваше имя:');
+  String name = stdin.readLineSync() ?? 'Гость';
+  
+  print('\nГенерируем случайное настроение...');
+  
+  List<Mood> moods = Mood.values;
+  Random random = Random();
+  Mood mood = moods[random.nextInt(moods.length)];
+  
+  String emoji;
+  String desc;
+  int energy;
+  
+  switch (mood) {
+    case Mood.happy:
+      emoji = '\u{1F600}';
+      desc = 'счастлив';
+      energy = 8;
+      break;
+    case Mood.sad:
+      emoji = '\u{1F622}';
+      desc = 'грустен';
+      energy = 3;
+      break;
+    case Mood.energetic:
+      emoji = '\u{26A1}';
+      desc = 'энергичен';
+      energy = 10;
+      break;
+    case Mood.calm:
+      emoji = '\u{1F60C}';
+      desc = 'спокоен';
+      energy = 5;
+      break;
+    case Mood.love:
+      emoji = '\u{2764}\u{FE0F}';
+      desc = 'влюблен';
+      energy = 9;
+      break;
+    case Mood.angry:
+      emoji = '\u{1F621}';
+      desc = 'зол';
+      energy = 2;
+      break;
+    case Mood.excited:
+      emoji = '\u{1F60E}';
+      desc = 'взволнованный';
+      energy = 9;
+      break;
+  }
+  
+  print('Привет, $name! Твое настроение: $emoji $desc (энергия: $energy/10)');
+  
+  String unicode = '';
+  for (int rune in emoji.runes) {
+    unicode += 'U+${rune.toRadixString(16).toUpperCase()} ';
+  }
+  print('\nЮникод вашего эмодзи: ${unicode.trim()}');
+  
+  print('\nХотите просмотреть сложные эмодзи? (да/нет):');
+  String answer = stdin.readLineSync()?.toLowerCase() ?? 'нет';
+  
+  if (answer == 'да') {
+    print('Введите комбинацию эмодзи:');
+    String input = stdin.readLineSync() ?? '';
+    
+    print('\nАнализ строки "$input":');
+    print('- 16-битных единиц: ${input.length}');
+    print('- Кодовых точек: ${input.runes.length}');
+    print('- Реальных символов: ${input.characters.length}');
+    
+    print('\nПодробный вывод юникода:');
+    int index = 1;
+    for (var char in input.characters) {
+      String code = '';
+      for (int rune in char.toString().runes) {
+        code += 'U+${rune.toRadixString(16).toUpperCase()} ';
+      }
+      print('Символ $index: $char → ${code.trim()}');
+      index++;
+    }
+  }
+  
+  print('\nСпасибо, приходите снова!');
+}
